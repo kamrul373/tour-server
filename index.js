@@ -19,6 +19,7 @@ async function run () {
 	const socialCollection = client.db( "tour" ).collection( "social" )
 	const subscriberCollection = client.db( "tour" ).collection( "subscriber" )
 	const exploreSlideCollection = client.db( "tour" ).collection( "exploreSlide" )
+	const exploreContentCollection = client.db( "tour" ).collection( "exploreContent" )
 	// home banner
 	app.post( "/updatebanner", async ( req, res ) => {
 		const request = req.body;
@@ -70,6 +71,27 @@ async function run () {
 	app.post( "/explore", async ( req, res ) => {
 		const query = req.body;
 		const result = await exploreSlideCollection.insertOne( query )
+		res.send( result )
+	} )
+	app.delete( "/explore/", async ( req, res ) => {
+		const id = req.body.id;
+		const query = { _id: ObjectId( id ) }
+		const result = await exploreSlideCollection.deleteOne( query )
+		res.send( result )
+	} )
+	app.get( "/explorecontent", async ( req, res ) => {
+		const query = {}
+		const result = await exploreContentCollection.find( query ).toArray()
+		res.send( result )
+	} )
+	app.patch( "/explorecontent", async ( req, res ) => {
+		const id = "63bf41bb454e0e6fab840fcf";
+		const filter = { _id: ObjectId( id ) }
+		const updatedoc = {
+			$set: req.body
+		}
+
+		const result = await exploreContentCollection.updateOne( filter, updatedoc )
 		res.send( result )
 	} )
 }
