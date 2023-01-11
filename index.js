@@ -21,7 +21,7 @@ async function run () {
 	// home banner
 	app.post( "/updatebanner", async ( req, res ) => {
 		const request = req.body;
-		console.log( request )
+		//console.log( request )
 		const udpateStatus = await bannerCollection.updateMany( { 'status': true }, { "$set": { 'status': false } } )
 		const result = await bannerCollection.insertOne( request );
 		res.send( result )
@@ -56,6 +56,7 @@ async function run () {
 	} )
 	app.post( "/subscriber", async ( req, res ) => {
 		const query = req.body;
+		//console.log( query )
 		const result = await subscriberCollection.insertOne( query )
 		res.send( result )
 	} )
