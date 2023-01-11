@@ -18,6 +18,7 @@ async function run () {
 	const bannerCollection = client.db( "tour" ).collection( "banner" )
 	const socialCollection = client.db( "tour" ).collection( "social" )
 	const subscriberCollection = client.db( "tour" ).collection( "subscriber" )
+	const exploreSlideCollection = client.db( "tour" ).collection( "exploreSlide" )
 	// home banner
 	app.post( "/updatebanner", async ( req, res ) => {
 		const request = req.body;
@@ -58,6 +59,17 @@ async function run () {
 		const query = req.body;
 		//console.log( query )
 		const result = await subscriberCollection.insertOne( query )
+		res.send( result )
+	} )
+	// explore slide 
+	app.get( "/explore", async ( req, res ) => {
+		const query = {}
+		const result = await exploreSlideCollection.find( query ).toArray()
+		res.send( result )
+	} )
+	app.post( "/explore", async ( req, res ) => {
+		const query = req.body;
+		const result = await exploreSlideCollection.insertOne( query )
 		res.send( result )
 	} )
 }
