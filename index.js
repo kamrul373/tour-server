@@ -17,6 +17,7 @@ const client = new MongoClient( uri, { useNewUrlParser: true, useUnifiedTopology
 async function run () {
 	const bannerCollection = client.db( "tour" ).collection( "banner" )
 	const socialCollection = client.db( "tour" ).collection( "social" )
+	const subscriberCollection = client.db( "tour" ).collection( "subscriber" )
 	// home banner
 	app.post( "/updatebanner", async ( req, res ) => {
 		const request = req.body;
@@ -45,6 +46,17 @@ async function run () {
 		const filter = { _id: ObjectId( id ) }
 		const result = await socialCollection.updateOne( filter, updatedoc )
 
+		res.send( result )
+	} )
+	// subscriber
+	app.get( "/subscriber", async ( req, res ) => {
+		const query = {};
+		const result = await subscriberCollection.find( query ).toArray()
+		res.send( result )
+	} )
+	app.post( "/subscriber", async ( req, res ) => {
+		const query = req.body;
+		const result = await subscriberCollection.insertOne( query )
 		res.send( result )
 	} )
 }
