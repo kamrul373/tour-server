@@ -12,6 +12,24 @@ app.use( express.json() )
 
 
 
+const { MongoClient, ServerApiVersion, ObjectId } = require( 'mongodb' );
+const uri = `mongodb+srv://${ process.env.DB_USER }:${ process.env.DB_PASS }@cluster0.lbqhd62.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient( uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 } );
+
+async function run () {
+	const bannerCollection = client.db( "tour" ).collection( "banner" )
+
+	app.post( "/updatebanner", async ( req, res ) => {
+		const request = req.body;
+		console.log( request )
+		//const query = {_id : ObjectId(request.id)}
+		const result = await bannerCollection.insertOne( request );
+		res.send( result )
+	} )
+}
+
+run().catch( error => console.log( error ) )
+
 
 // base url api
 app.get( "/", ( req, res ) => {
