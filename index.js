@@ -16,6 +16,9 @@ const client = new MongoClient( uri, { useNewUrlParser: true, useUnifiedTopology
 
 async function run () {
 	const bannerCollection = client.db( "tour" ).collection( "banner" )
+	const bannerContent = client.db( "tour" ).collection( "bannerContent" )
+	const bannerSlidesCollection = client.db( "tour" ).collection( "bannerslides" )
+
 	const socialCollection = client.db( "tour" ).collection( "social" )
 	const subscriberCollection = client.db( "tour" ).collection( "subscriber" )
 	const exploreSlideCollection = client.db( "tour" ).collection( "exploreSlide" )
@@ -29,10 +32,39 @@ async function run () {
 		res.send( result )
 	} )
 	app.get( "/banner", async ( req, res ) => {
-		const query = { status: true }
-		const result = await bannerCollection.findOne( query )
+		const query = {}
+		const result = await bannerContent.findOne( query )
 		res.send( result )
 	} )
+	app.patch( "/banner", async ( req, res ) => {
+		const updatedoc = {
+			$set: req.body
+		}
+		const id = "63bf4e4c1e0f93ca8444f14f";
+		const filter = { _id: ObjectId( id ) }
+		const result = await bannerContent.updateOne( filter, updatedoc )
+
+		res.send( result )
+	} )
+
+	// banner slide 
+	app.get( "/bannerslide", async ( req, res ) => {
+		const query = {}
+		const result = await bannerSlidesCollection.find( query ).toArray()
+		res.send( result )
+	} )
+	app.post( "/bannerslide", async ( req, res ) => {
+		const query = req.body;
+		const result = await bannerSlidesCollection.insertOne( query )
+		res.send( result )
+	} )
+	app.delete( "/bannerslide/", async ( req, res ) => {
+		const id = req.body.id;
+		const query = { _id: ObjectId( id ) }
+		const result = await bannerSlidesCollection.deleteOne( query )
+		res.send( result )
+	} )
+
 	// social 
 	app.get( "/social", async ( req, res ) => {
 		const id = "63bf1137037754a56bd0e41f";
