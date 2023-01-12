@@ -23,6 +23,8 @@ async function run () {
 	const subscriberCollection = client.db( "tour" ).collection( "subscriber" )
 	const exploreSlideCollection = client.db( "tour" ).collection( "exploreSlide" )
 	const exploreContentCollection = client.db( "tour" ).collection( "exploreContent" )
+	const siteSettingCollection = client.db( "tour" ).collection( "setting" )
+
 	// home banner
 	app.post( "/updatebanner", async ( req, res ) => {
 		const request = req.body;
@@ -124,6 +126,21 @@ async function run () {
 		}
 
 		const result = await exploreContentCollection.updateOne( filter, updatedoc )
+		res.send( result )
+	} )
+	// site config
+	app.patch( "/config", async ( req, res ) => {
+		const id = "63bf6152d8401f10d1441c31";
+		const filter = { _id: ObjectId( id ) }
+		const updatedoc = {
+			$set: req.body
+		}
+		const result = await siteSettingCollection.updateOne( filter, updatedoc )
+		res.send( result )
+	} )
+	app.get( "/config", async ( req, res ) => {
+		const query = {}
+		const result = await siteSettingCollection.findOne( query )
 		res.send( result )
 	} )
 }
